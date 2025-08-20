@@ -13,6 +13,7 @@ import {
   Vote,
   Flag,
   MessageCircle,
+  Plus,
 } from "lucide-react";
 
 import { NavFavorites } from "@/components/nav-favorites";
@@ -26,6 +27,8 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 // Logo component for the app
 const AppLogo = () => (
@@ -139,6 +142,14 @@ export function SidebarLeft({
         {/* <NavWorkspaces workspaces={data.workspaces} /> */}
         {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
       </SidebarContent>
+      <SidebarFooter className="p-4">
+        <Link href="/group/new">
+          <Button className="w-full" size="sm">
+            <Plus className="mr-2 h-4 w-4" />
+            Create New Group
+          </Button>
+        </Link>
+      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   );
