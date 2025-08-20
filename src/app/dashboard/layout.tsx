@@ -18,13 +18,6 @@ export default function DashboardLayout({
       <SidebarLeft />
       <SidebarInset>
         <header className="bg-background sticky top-0 flex h-16 shrink-0 items-center gap-2 border-b">
-          <div className="flex items-center gap-2 px-3">
-            <SidebarTrigger />
-            <Separator
-              orientation="vertical"
-              className="mr-2 data-[orientation=vertical]:h-4"
-            />
-          </div>
           <div className="flex-1 flex justify-center px-4">
             <AIInput
               placeholder="Search destinations, hotels, or ask about your trip..."
@@ -33,7 +26,6 @@ export default function DashboardLayout({
               className="[&_textarea]:py-4 [&_textarea]:leading-normal"
             />
           </div>
-          <div className="w-[60px]"></div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4">{children}</div>
       </SidebarInset>

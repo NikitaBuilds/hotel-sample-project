@@ -18,33 +18,25 @@ import { NavFavorites } from "@/components/nav-favorites";
 import { NavMain } from "@/components/nav-main";
 import { NavSecondary } from "@/components/nav-secondary";
 import { NavWorkspaces } from "@/components/nav-workspaces";
-import { TeamSwitcher } from "@/components/team-switcher";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
 
+// Logo component for the app
+const AppLogo = () => (
+  <div className="flex items-center justify-center gap-2 px-6 h-16 border-b">
+    {/* <div className="flex flex-col">
+      <span className="font-bold text-2xl">Alpine</span>
+    </div> */}
+  </div>
+);
+
 // This is sample data.
 const data = {
-  teams: [
-    {
-      name: "Winter Warriors 2024",
-      logo: Flag,
-      plan: "Active Trip",
-    },
-    {
-      name: "Powder Seekers",
-      logo: Mountain,
-      plan: "Planning",
-    },
-    {
-      name: "Alpine Adventures",
-      logo: Mountain,
-      plan: "Completed",
-    },
-  ],
   navMain: [
     {
       title: "Trip Overview",
@@ -102,158 +94,29 @@ const data = {
       url: "#",
       emoji: "⛷️",
     },
-    {
-      name: "Whistler Blackcomb",
-      url: "#",
-      emoji: "🏔️",
-    },
-    {
-      name: "Vail Mountain Resort",
-      url: "#",
-      emoji: "🎿",
-    },
-    {
-      name: "Group Chat & Messages",
-      url: "#",
-      emoji: "💬",
-    },
-    {
-      name: "Weather Forecasts",
-      url: "#",
-      emoji: "🌨️",
-    },
-    {
-      name: "Packing Checklist",
-      url: "#",
-      emoji: "🎒",
-    },
-    {
-      name: "Equipment Rentals",
-      url: "#",
-      emoji: "🎿",
-    },
-    {
-      name: "Lift Tickets & Passes",
-      url: "#",
-      emoji: "🎫",
-    },
-    {
-      name: "Après-Ski Activities",
-      url: "#",
-      emoji: "🍻",
-    },
-    {
-      name: "Emergency Contacts",
-      url: "#",
-      emoji: "🚨",
-    },
   ],
   workspaces: [
-    {
-      name: "Destination Research",
-      emoji: "🏔️",
-      pages: [
-        {
-          name: "Resort Comparison & Reviews",
-          url: "#",
-          emoji: "📊",
-        },
-        {
-          name: "Snow Conditions & Weather",
-          url: "#",
-          emoji: "🌨️",
-        },
-        {
-          name: "Trail Maps & Difficulty Levels",
-          url: "#",
-          emoji: "🗺️",
-        },
-      ],
-    },
-    {
-      name: "Accommodation Planning",
-      emoji: "🏨",
-      pages: [
-        {
-          name: "Hotel Options & Pricing",
-          url: "#",
-          emoji: "🏠",
-        },
-        {
-          name: "Booking Status & Confirmations",
-          url: "#",
-          emoji: "✅",
-        },
-        {
-          name: "Room Assignments & Preferences",
-          url: "#",
-          emoji: "🛏️",
-        },
-      ],
-    },
-    {
-      name: "Activity Planning",
-      emoji: "⛷️",
-      pages: [
-        {
-          name: "Ski Lessons & Instruction",
-          url: "#",
-          emoji: "🎿",
-        },
-        {
-          name: "Equipment & Gear Rentals",
-          url: "#",
-          emoji: "🎒",
-        },
-        {
-          name: "Après-Ski & Dining",
-          url: "#",
-          emoji: "🍽️",
-        },
-      ],
-    },
-    {
-      name: "Budget Management",
-      emoji: "💰",
-      pages: [
-        {
-          name: "Trip Cost Breakdown",
-          url: "#",
-          emoji: "📋",
-        },
-        {
-          name: "Payment Tracking & Splits",
-          url: "#",
-          emoji: "💳",
-        },
-        {
-          name: "Expense Reports & Receipts",
-          url: "#",
-          emoji: "🧾",
-        },
-      ],
-    },
-    {
-      name: "Group Coordination",
-      emoji: "👥",
-      pages: [
-        {
-          name: "Member Status & Availability",
-          url: "#",
-          emoji: "📅",
-        },
-        {
-          name: "Group Decisions & Voting",
-          url: "#",
-          emoji: "🗳️",
-        },
-        {
-          name: "Communication & Updates",
-          url: "#",
-          emoji: "💬",
-        },
-      ],
-    },
+    // {
+    //   name: "Destination Research",
+    //   emoji: "🏔️",
+    //   pages: [
+    //     {
+    //       name: "Resort Comparison & Reviews",
+    //       url: "#",
+    //       emoji: "📊",
+    //     },
+    //     {
+    //       name: "Snow Conditions & Weather",
+    //       url: "#",
+    //       emoji: "🌨️",
+    //     },
+    //     {
+    //       name: "Trail Maps & Difficulty Levels",
+    //       url: "#",
+    //       emoji: "🗺️",
+    //     },
+    //   ],
+    // },
   ],
 };
 
@@ -262,14 +125,14 @@ export function SidebarLeft({
 }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar className="border-r-0" {...props}>
-      <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+      <SidebarHeader className="py-0 px-0">
+        <AppLogo />
         <NavMain items={data.navMain} />
       </SidebarHeader>
       <SidebarContent>
-        <NavFavorites favorites={data.favorites} />
-        <NavWorkspaces workspaces={data.workspaces} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        {/* <NavFavorites favorites={data.favorites} /> */}
+        {/* <NavWorkspaces workspaces={data.workspaces} /> */}
+        {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
       </SidebarContent>
       <SidebarRail />
     </Sidebar>
