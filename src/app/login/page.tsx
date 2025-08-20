@@ -1,6 +1,7 @@
-import { GalleryVerticalEnd } from "lucide-react"
+import { GalleryVerticalEnd } from "lucide-react";
 
-import { LoginForm } from "@/components/login-form"
+import { LoginForm } from "@/components/login-form";
+import Featured_05 from "@/components/ui/globe-feature-section";
 
 export default function LoginPage() {
   return (
@@ -11,7 +12,7 @@ export default function LoginPage() {
             <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
               <GalleryVerticalEnd className="size-4" />
             </div>
-            Acme Inc.
+            HolidayBooker
           </a>
         </div>
         <div className="flex flex-1 items-center justify-center">
@@ -20,13 +21,9 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
-      <div className="bg-muted relative hidden lg:block">
-        <img
-          src="/placeholder.svg"
-          alt="Image"
-          className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-        />
+      <div className="relative hidden lg:flex bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 overflow-hidden items-center justify-center p-6">
+        <Featured_05 />
       </div>
     </div>
-  )
+  );
 }

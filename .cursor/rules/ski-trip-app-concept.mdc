@@ -1,0 +1,39 @@
+---
+alwaysApply: true
+description: Project concept and copy guidelines for the ski trip planning app
+---
+
+# Ski Trip Planning App - Project Concept
+
+## What We're Building
+
+A collaborative web app helping **3-5 friends plan a ski trip together**. This is a 24-hour technical assessment focused on demonstrating full-stack capabilities and product thinking.
+
+## Core App Identity
+
+- **Target Users**: Groups of friends (3-5 people) planning ski trips
+- **Primary Goal**: Collaborative decision-making for ski trip planning
+- **Tone**: Friendly, adventure-focused, group-oriented
+
+## Key Messaging Themes
+
+- **Collaboration**: "Plan together", "Vote together", "Ski together"
+- **Adventure**: Mountain destinations, ski resorts, winter sports
+- **Friendship**: Group activities, shared experiences, collective decisions
+- **Simplicity**: Easy booking, clear choices, streamlined planning
+
+## Core Features (Copy Context)
+
+- **Destinations**: 2-3 ski resort options with hotels and pricing
+- **Group Management**: Show trip participants and their status
+- **Voting System**: Democratic trip selection process
+- **Hotel Selection**: Flexible accommodation options
+- **Payment Tracking**: Booking simulation and cost management
+
+## Copy Style Guide
+
+- Use "we", "us", "together" language
+- Focus on the group experience
+- Keep ski/winter sports terminology natural
+- Emphasize ease and collaboration
+- Friendly, encouraging tone without being overly casual

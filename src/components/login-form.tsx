@@ -70,12 +70,12 @@ export function LoginForm({
     >
       <div className="flex flex-col items-center gap-2 text-center">
         <h1 className="text-2xl font-bold">
-          {isSignUp ? "Create your account" : "Login to your account"}
+          {isSignUp ? "Start Your Holiday Journey" : "Welcome Back, Explorer"}
         </h1>
         <p className="text-muted-foreground text-sm text-balance">
           {isSignUp
-            ? "Enter your email below to create your account"
-            : "Enter your email below to login to your account"}
+            ? "Create your account to book the best holidays with your friends"
+            : "Sign in to discover and book amazing holidays with your friends"}
         </p>
       </div>
 
@@ -120,8 +120,17 @@ export function LoginForm({
             minLength={6}
           />
         </div>
-        <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? "Loading..." : isSignUp ? "Sign up" : "Login"}
+        <Button
+          type="submit"
+          className="w-full bg-blue-500 hover:bg-blue-600"
+          size="lg"
+          disabled={loading}
+        >
+          {loading
+            ? "Loading..."
+            : isSignUp
+            ? "Start Planning"
+            : "Let's Explore"}
         </Button>
         <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
           <span className="bg-background text-muted-foreground relative z-10 px-2">
@@ -161,15 +170,17 @@ export function LoginForm({
         </Button>
       </div>
       <div className="text-center text-sm">
-        {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
-        <button
+        {isSignUp ? "Already have an account?" : "New to holiday planning?"}
+        <Button
           type="button"
+          variant="link"
           onClick={() => setIsSignUp(!isSignUp)}
-          className="underline underline-offset-4 hover:text-primary"
+          className="underline underline-offset-4 text-yellow-500 font-bold hover:text-yellow-600"
+          size="sm"
           disabled={loading}
         >
-          {isSignUp ? "Sign in" : "Sign up"}
-        </button>
+          {isSignUp ? "Sign in" : "Join the adventure"}
+        </Button>
       </div>
     </form>
   );
