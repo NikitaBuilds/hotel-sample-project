@@ -41,8 +41,7 @@ export interface DateRange {
 export interface Occupancy {
   rooms: number;
   adults: number;
-  children: number;
-  childAges?: number[];
+  children: number[]; // Array of child ages, empty array if no children
 }
 
 export interface GuestInfo {

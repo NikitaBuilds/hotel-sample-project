@@ -14,6 +14,17 @@ export interface SearchRequest {
   occupancies: Occupancy[];
   guestResidency?: string; // ISO country code
   timeout?: number; // seconds
+
+  // Location parameters (at least one required)
+  countryCode?: string; // ISO country code
+  latitude?: number;
+  longitude?: number;
+  placeId?: string;
+  iataCode?: string; // Airport code
+
+  // Pagination parameters
+  page?: number;
+  limit?: number;
 }
 
 export interface TaxFee {
@@ -85,6 +96,11 @@ export interface HotelRate {
   minPrice?: Price;
   maxPrice?: Price;
   availableRooms: number;
+  // Hotel details from LiteAPI
+  name?: string;
+  main_photo?: string;
+  address?: string;
+  rating?: number;
 }
 
 export interface MinimumRate {
@@ -98,6 +114,25 @@ export interface MinimumRate {
   groupDiscount?: number;
 }
 
+// Raw response from LiteAPI
+export interface LiteAPIRawResponse {
+  data: HotelRate[]; // The actual hotel rates
+  hotels: BasicHotelInfo[]; // Basic hotel metadata
+  searchId?: string;
+  totalResults?: number; // Often incorrect in sandbox
+  sandbox?: boolean;
+  guestLevel?: number;
+}
+
+export interface BasicHotelInfo {
+  id: string;
+  name: string;
+  main_photo?: string;
+  address?: string;
+  rating?: number;
+}
+
+// Our processed response for the frontend
 export interface SearchResponse {
   hotels: HotelRate[];
   searchId?: string;
@@ -110,6 +145,14 @@ export interface SearchResponse {
   priceRange?: {
     min: Price;
     max: Price;
+  };
+  // Pagination metadata
+  pagination?: {
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
   };
 }
 

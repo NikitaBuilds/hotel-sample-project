@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { ReactQueryProvider } from "@/lib/react-query";
 import { AuthProvider } from "@/services/supabase/use-user";
 
 const geistSans = Geist({
@@ -14,9 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Hotels Sample Project",
-  description:
-    "A modern hotel booking application with Supabase authentication",
+  title: "Ski Trip Planner",
+  description: "Plan your perfect ski trip with friends",
 };
 
 export default function RootLayout({
@@ -29,7 +29,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <ReactQueryProvider>{children}</ReactQueryProvider>
+        </AuthProvider>
       </body>
     </html>
   );
