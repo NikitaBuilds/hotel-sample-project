@@ -12,6 +12,7 @@ import {
   Users,
   Vote,
   Flag,
+  MessageCircle,
 } from "lucide-react";
 
 import { NavFavorites } from "@/components/nav-favorites";
@@ -40,35 +41,33 @@ const data = {
   navMain: [
     {
       title: "Trip Overview",
-      url: "#",
+      url: "/dashboard",
       icon: Home,
-      isActive: true,
     },
     {
-      title: "Destinations",
-      url: "#",
+      title: "Explore",
+      url: "/dashboard/explore",
       icon: Mountain,
     },
     {
-      title: "Our Group",
-      url: "#",
-      icon: Users,
-      badge: "5",
-    },
-    {
       title: "Vote Together",
-      url: "#",
+      url: "/dashboard/vote",
       icon: Vote,
     },
     {
       title: "Hotels & Lodging",
-      url: "#",
+      url: "/dashboard/hotels",
       icon: Building,
     },
     {
       title: "Budget & Payments",
-      url: "#",
+      url: "/dashboard/budget",
       icon: CreditCard,
+    },
+    {
+      title: "Chat",
+      url: "/dashboard/chat",
+      icon: MessageCircle,
     },
   ],
   navSecondary: [

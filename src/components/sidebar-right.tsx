@@ -3,6 +3,7 @@ import { Plus, Flag, Mountain } from "lucide-react";
 
 import { Calendars } from "@/components/calendars";
 import { DatePicker } from "@/components/date-picker";
+import { GroupMembers } from "@/components/group-members";
 import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
@@ -65,7 +66,9 @@ export function SidebarRight({
       </SidebarHeader>
       <SidebarContent>
         <DatePicker />
-        <SidebarSeparator className="mx-0" />
+        {/* <SidebarSeparator className="mx-0 " /> */}
+        <GroupMembers />
+        {/* Commented out trips section - replaced with group members
         <div className="px-3 py-4">
           <h3 className="text-xs font-medium text-muted-foreground mb-3 px-2">
             Your Trips
@@ -95,7 +98,18 @@ export function SidebarRight({
             })}
           </div>
         </div>
+        */}
       </SidebarContent>
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton className="w-full">
+              <Plus className="size-4" />
+              <span>Add New Member</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
   );
 }
