@@ -69,6 +69,12 @@ const data = {
       url: "/dashboard/chat",
       icon: MessageCircle,
     },
+    // Group settings
+    {
+      title: "Group Settings",
+      url: "/dashboard/group-settings",
+      icon: Settings2,
+    },
   ],
   navSecondary: [
     {
