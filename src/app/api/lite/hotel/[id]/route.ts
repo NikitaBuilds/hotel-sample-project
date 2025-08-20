@@ -15,10 +15,11 @@ const headers = {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const hotelId = params.id;
+    const { id } = await params;
+    const hotelId = id;
 
     if (!hotelId) {
       return NextResponse.json(

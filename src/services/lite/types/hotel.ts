@@ -89,53 +89,50 @@ export interface GroupAmenities {
   connectingRooms: boolean;
 }
 
+// Lighter, actual LiteAPI response structure
 export interface HotelDetails {
   id: string;
   name: string;
-  hotelDescription: string;
-  hotelImportantInformation?: string;
-  checkinCheckoutTimes: CheckinCheckoutTimes;
-  hotelImages: HotelImage[];
-  country: string;
-  city: string;
-  region?: string;
-  starRating: number;
-  location: Location;
-  address: string;
-  hotelFacilities: HotelFacility[];
-  rooms: Room[];
-  restaurants?: Restaurant[];
+  hotelDescription?: string; // HTML content
+  checkinCheckoutTimes?: CheckinCheckoutTimes;
+  hotelImages?: HotelImage[];
+  country?: string;
+  city?: string;
+  starRating?: number;
+  rating?: number; // Guest rating
+  reviewCount?: number;
+  location?: Location;
+  address?: string; // Simple string, not object
+  zip?: string;
+  hotelFacilities?: HotelFacility[];
+  rooms?: Room[];
 
-  // Ski trip specific information
-  skiAmenities?: SkiAmenities;
-  groupAmenities?: GroupAmenities;
-  resortInfo?: SkiResortInfo;
-
-  // Policies relevant for group bookings
-  cancellationPolicy?: string;
-  childPolicy?: string;
-  petPolicy?: string;
-  groupBookingPolicy?: string;
-
-  // Contact and booking info
+  // Contact info
   phone?: string;
   email?: string;
-  website?: string;
 
-  // Seasonal information
-  seasonalClosures?: string[];
-  peakSeasons?: string[];
+  // Policies (simplified)
+  policies?: Array<{
+    id: number;
+    policy_type: string;
+    name: string;
+    description: string;
+  }>;
 
-  // Reviews and ratings (if available)
-  guestRating?: number;
-  reviewCount?: number;
+  // Additional LiteAPI fields
+  hotelType?: string;
+  hotelTypeId?: number;
+  airportCode?: string;
+  childAllowed?: boolean;
+  petsAllowed?: boolean;
+  parking?: string;
 
-  // Pricing context
-  priceRange?: "BUDGET" | "MID_RANGE" | "LUXURY" | "ULTRA_LUXURY";
+  // Ski trip specific (optional)
+  skiResortInfo?: SkiResortInfo;
 }
 
 export interface HotelDetailsResponse {
-  hotel: HotelDetails;
+  data: HotelDetails; // LiteAPI returns data at this level
   lastUpdated?: string;
 }
 

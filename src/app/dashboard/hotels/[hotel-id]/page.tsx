@@ -41,7 +41,7 @@ export default function HotelDetailsPage() {
     enabled: !!hotelId,
   });
 
-  const hotel = hotelResponse?.data;
+  const hotel = hotelResponse?.data?.data;
 
   if (isLoading) {
     return <HotelDetailsLoading />;
@@ -49,7 +49,7 @@ export default function HotelDetailsPage() {
 
   if (error || !hotel) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 ">
         <div className="max-w-4xl mx-auto">
           <Button
             variant="ghost"
@@ -79,7 +79,7 @@ export default function HotelDetailsPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
@@ -105,9 +105,6 @@ export default function HotelDetailsPage() {
           <div className="lg:col-span-2 space-y-6">
             {/* Description */}
             <HotelDescription hotel={hotel} />
-
-            {/* Amenities */}
-            <HotelAmenities hotel={hotel} />
 
             {/* Rooms */}
             <HotelRooms hotel={hotel} />
@@ -150,9 +147,9 @@ function HotelOverview({ hotel }: { hotel: HotelDetails }) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Hotel Image */}
           <div className="aspect-video rounded-lg overflow-hidden bg-muted">
-            {hotel.images?.[0]?.url ? (
+            {hotel.hotelImages?.[0]?.url ? (
               <img
-                src={hotel.images[0].url}
+                src={hotel.hotelImages[0].url}
                 alt={hotel.name}
                 className="w-full h-full object-cover"
                 loading="lazy"
@@ -178,11 +175,10 @@ function HotelOverview({ hotel }: { hotel: HotelDetails }) {
                 <div className="flex items-start gap-2 text-muted-foreground">
                   <MapPinIcon className="h-4 w-4 mt-0.5 flex-shrink-0" />
                   <span className="text-sm">
-                    {hotel.address.line1}
-                    {hotel.address.line2 && `, ${hotel.address.line2}`}
+                    {hotel.address}
                     <br />
-                    {hotel.address.city}, {hotel.address.countryCode}
-                    {hotel.address.postalCode && ` ${hotel.address.postalCode}`}
+                    {hotel.city}, {hotel.country}
+                    {hotel.zip && ` ${hotel.zip}`}
                   </span>
                 </div>
               )}
@@ -204,16 +200,16 @@ function HotelOverview({ hotel }: { hotel: HotelDetails }) {
                   Ski-in/Ski-out
                 </Badge>
               )}
-              {hotel.facilities?.some((f: any) =>
-                f.name.toLowerCase().includes("wifi")
+              {hotel.hotelFacilities?.some((f: any) =>
+                f?.name?.toLowerCase()?.includes("wifi")
               ) && (
                 <Badge variant="outline">
                   <WifiIcon className="h-3 w-3 mr-1" />
                   Free WiFi
                 </Badge>
               )}
-              {hotel.facilities?.some((f: any) =>
-                f.name.toLowerCase().includes("parking")
+              {hotel.hotelFacilities?.some((f: any) =>
+                f?.name?.toLowerCase()?.includes("parking")
               ) && (
                 <Badge variant="outline">
                   <CarIcon className="h-3 w-3 mr-1" />
@@ -223,9 +219,9 @@ function HotelOverview({ hotel }: { hotel: HotelDetails }) {
             </div>
 
             {/* Short Description */}
-            {hotel.description && (
+            {hotel.hotelDescription && (
               <p className="text-muted-foreground text-sm line-clamp-3">
-                {hotel.description}
+                {hotel.hotelDescription.replace(/<[^>]*>/g, "")}
               </p>
             )}
           </div>
@@ -236,7 +232,15 @@ function HotelOverview({ hotel }: { hotel: HotelDetails }) {
 }
 
 function HotelDescription({ hotel }: { hotel: HotelDetails }) {
-  if (!hotel.description) return null;
+  if (!hotel.hotelDescription) return null;
+
+  // Strip HTML tags and clean up the description
+  const cleanDescription = hotel.hotelDescription
+    .replace(/<[^>]*>/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (!cleanDescription) return null;
 
   return (
     <Card>
@@ -245,52 +249,8 @@ function HotelDescription({ hotel }: { hotel: HotelDetails }) {
       </CardHeader>
       <CardContent>
         <p className="text-muted-foreground leading-relaxed">
-          {hotel.description}
+          {cleanDescription}
         </p>
-      </CardContent>
-    </Card>
-  );
-}
-
-function HotelAmenities({ hotel }: { hotel: HotelDetails }) {
-  if (!hotel.facilities?.length) return null;
-
-  const getAmenityIcon = (name: string) => {
-    const lowerName = name.toLowerCase();
-    if (lowerName.includes("wifi") || lowerName.includes("internet"))
-      return WifiIcon;
-    if (lowerName.includes("parking") || lowerName.includes("garage"))
-      return CarIcon;
-    if (lowerName.includes("restaurant") || lowerName.includes("dining"))
-      return UtensilsIcon;
-    if (lowerName.includes("pool") || lowerName.includes("swimming"))
-      return MountainIcon;
-    if (lowerName.includes("gym") || lowerName.includes("fitness"))
-      return DumbbellIcon;
-    if (lowerName.includes("spa") || lowerName.includes("wellness"))
-      return MountainIcon;
-    if (lowerName.includes("bar") || lowerName.includes("coffee"))
-      return CoffeeIcon;
-    return MountainIcon;
-  };
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Hotel Amenities</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {hotel.facilities.map((facility: any, index: number) => {
-            const IconComponent = getAmenityIcon(facility.name);
-            return (
-              <div key={index} className="flex items-center gap-3">
-                <IconComponent className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                <span className="text-sm">{facility.name}</span>
-              </div>
-            );
-          })}
-        </div>
       </CardContent>
     </Card>
   );
@@ -324,9 +284,11 @@ function HotelRooms({ hotel }: { hotel: HotelDetails }) {
               {room.facilities?.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                   {room.facilities
-                    .slice(0, 6)
-                    .map((facility: any, facilityIndex: number) => {
+                    ?.filter((facility: any) => facility?.name) // Filter out facilities without names
+                    ?.slice(0, 6)
+                    ?.map((facility: any, facilityIndex: number) => {
                       const getRoomIcon = (name: string) => {
+                        if (!name) return BedIcon;
                         const lowerName = name.toLowerCase();
                         if (lowerName.includes("bed")) return BedIcon;
                         if (
@@ -381,12 +343,13 @@ function HotelLocation({ hotel }: { hotel: HotelDetails }) {
           <div className="flex items-start gap-2">
             <MapPinIcon className="h-4 w-4 mt-0.5 text-muted-foreground flex-shrink-0" />
             <div className="text-sm">
-              <div>{hotel.address.line1}</div>
-              {hotel.address.line2 && <div>{hotel.address.line2}</div>}
-              <div>
-                {hotel.address.city}, {hotel.address.countryCode}
-                {hotel.address.postalCode && ` ${hotel.address.postalCode}`}
-              </div>
+              <div>{hotel.address}</div>
+              {hotel.city && hotel.country && (
+                <div>
+                  {hotel.city}, {hotel.country}
+                  {hotel.zip && ` ${hotel.zip}`}
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -414,25 +377,27 @@ function HotelLocation({ hotel }: { hotel: HotelDetails }) {
 }
 
 function HotelContact({ hotel }: { hotel: HotelDetails }) {
+  const hasContactInfo = hotel.phone || hotel.email;
+
   return (
     <Card>
       <CardHeader>
         <CardTitle>Contact Information</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
-        {hotel.contact?.phone && (
+        {hotel.phone && (
           <div className="flex items-center gap-2">
             <PhoneIcon className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm">{hotel.contact.phone}</span>
+            <span className="text-sm">{hotel.phone}</span>
           </div>
         )}
-        {hotel.contact?.email && (
+        {hotel.email && (
           <div className="flex items-center gap-2">
             <MailIcon className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm">{hotel.contact.email}</span>
+            <span className="text-sm">{hotel.email}</span>
           </div>
         )}
-        {!hotel.contact?.phone && !hotel.contact?.email && (
+        {!hasContactInfo && (
           <p className="text-sm text-muted-foreground">
             Contact information not available
           </p>

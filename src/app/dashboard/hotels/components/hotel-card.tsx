@@ -201,7 +201,9 @@ export function HotelCard({
           <Button
             variant="outline"
             className="flex-1"
-            onClick={() => router.push(`/dashboard/hotels/${hotel.hotelId}`)}
+            onClick={() =>
+              window.open(`/dashboard/hotels/${hotel.hotelId}`, "_blank")
+            }
           >
             View Details
           </Button>

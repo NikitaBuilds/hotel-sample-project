@@ -3,7 +3,12 @@
  * Awesome caching strategy for ski trip planning
  */
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  keepPreviousData,
+} from "@tanstack/react-query";
 import type {
   HotelDetails,
   HotelDetailsResponse,
@@ -219,7 +224,7 @@ export const useHotelSearchPaginated = (
     staleTime: 2 * 60 * 1000, // 2 minutes
     gcTime: 5 * 60 * 1000, // 5 minutes
     enabled: options?.enabled ?? true,
-    keepPreviousData: true, // Keep previous page data while loading new page
+    placeholderData: keepPreviousData, // Keep previous page data while loading new page
   });
 };
 
