@@ -51,10 +51,13 @@ export function AIInput({
             "focus-visible:ring-0 focus-visible:ring-offset-0",
             "transition-[height] duration-100 ease-out",
             "leading-[1.2] py-[16px]",
-            `min-h-[${minHeight}px]`,
-            `max-h-[${maxHeight}px]`,
             "[&::-webkit-resizer]:hidden"
           )}
+          style={{
+            minHeight: `${minHeight}px`,
+            maxHeight: `${maxHeight}px`,
+            height: `${minHeight}px`,
+          }}
           ref={textareaRef}
           value={inputValue}
           onChange={(e) => {
