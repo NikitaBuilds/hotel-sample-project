@@ -29,13 +29,12 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { ActiveGroupDisplay } from "./active-group-display";
 
-// Logo component for the app
-const AppLogo = () => (
-  <div className="flex items-center justify-center gap-2 px-6 h-16 border-b">
-    {/* <div className="flex flex-col">
-      <span className="font-bold text-2xl">Alpine</span>
-    </div> */}
+// Active Group Header - shows current trip
+const ActiveGroupHeader = () => (
+  <div className="border-b">
+    <ActiveGroupDisplay />
   </div>
 );
 
@@ -134,7 +133,7 @@ export function SidebarLeft({
   return (
     <Sidebar className="border-r-0" {...props}>
       <SidebarHeader className="py-0 px-0">
-        <AppLogo />
+        <ActiveGroupHeader />
         <NavMain items={data.navMain} />
       </SidebarHeader>
       <SidebarContent>

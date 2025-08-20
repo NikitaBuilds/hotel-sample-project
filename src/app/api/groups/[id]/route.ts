@@ -31,7 +31,29 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       );
     }
 
-    // Get group with members, but only if user is a member
+    // Check if user is a member first
+    const { data: membership, error: membershipCheckError } = await supabase
+      .from("group_members")
+      .select("group_id")
+      .eq("group_id", id)
+      .eq("user_id", user.id)
+      .single();
+
+    if (membershipCheckError) {
+      return NextResponse.json<GroupAPIResponse<null>>(
+        {
+          success: false,
+          error: {
+            code: "NOT_FOUND",
+            message: "Group not found or access denied",
+          },
+          timestamp: new Date().toISOString(),
+        },
+        { status: 404 }
+      );
+    }
+
+    // Get group with members
     const { data: group, error: groupError } = await supabase
       .from("groups")
       .select(
@@ -52,10 +74,6 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       `
       )
       .eq("id", id)
-      .in(
-        "id",
-        supabase.from("group_members").select("group_id").eq("user_id", user.id)
-      )
       .single();
 
     if (groupError) {

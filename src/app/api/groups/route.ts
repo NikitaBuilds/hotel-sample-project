@@ -98,6 +98,42 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get("limit") || "10");
     const offset = (page - 1) * limit;
 
+    // First get group IDs where user is a member
+    const { data: memberGroups, error: memberError } = await supabase
+      .from("group_members")
+      .select("group_id")
+      .eq("user_id", user.id);
+
+    if (memberError) {
+      return NextResponse.json<GroupAPIResponse<null>>(
+        {
+          success: false,
+          error: { code: "DATABASE_ERROR", message: memberError.message },
+          timestamp: new Date().toISOString(),
+        },
+        { status: 500 }
+      );
+    }
+
+    const groupIds = memberGroups.map((m) => m.group_id);
+
+    // If user is not a member of any groups, return empty result
+    if (groupIds.length === 0) {
+      const response: PaginatedGroupsResponse = {
+        groups: [],
+        total: 0,
+        page,
+        limit,
+        hasMore: false,
+      };
+
+      return NextResponse.json<GroupAPIResponse<PaginatedGroupsResponse>>({
+        success: true,
+        data: response,
+        timestamp: new Date().toISOString(),
+      });
+    }
+
     // Get groups where user is a member
     const { data: groups, error: groupsError } = await supabase
       .from("groups")
@@ -118,10 +154,7 @@ export async function GET(request: NextRequest) {
         )
       `
       )
-      .in(
-        "id",
-        supabase.from("group_members").select("group_id").eq("user_id", user.id)
-      )
+      .in("id", groupIds)
       .order("created_at", { ascending: false })
       .range(offset, offset + limit - 1);
 
@@ -140,10 +173,7 @@ export async function GET(request: NextRequest) {
     const { count, error: countError } = await supabase
       .from("groups")
       .select("id", { count: "exact", head: true })
-      .in(
-        "id",
-        supabase.from("group_members").select("group_id").eq("user_id", user.id)
-      );
+      .in("id", groupIds);
 
     if (countError) {
       return NextResponse.json<GroupAPIResponse<null>>(

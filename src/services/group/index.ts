@@ -9,6 +9,9 @@ export * from "./management";
 // Invitations
 export * from "./invitations";
 
+// Additional Hooks
+export * from "./hooks";
+
 // Re-export commonly used types and hooks
 export type {
   // Group Management
@@ -21,11 +24,14 @@ export type {
   UpdateGroupRequest,
 
   // Invitations
+} from "./management";
+
+export type {
   Invitation,
   InvitationStatus,
   SendInvitationRequest,
   InvitationEmailData,
-} from "./management";
+} from "./invitations";
 
 export type {
   Invitation as InvitationType,
@@ -35,16 +41,6 @@ export type {
 } from "./invitations";
 
 export {
-  // Group Management Hooks
-  useGroups,
-  useGroupDetails,
-  useCreateGroup,
-  useUpdateGroup,
-  useDeleteGroup,
-  useGroupCacheUtils,
-  groupQueryKeys,
-
-  // Invitation Hooks
   useGroupInvitations,
   useInvitation,
   useSendInvitation,
@@ -53,6 +49,16 @@ export {
   useCancelInvitation,
   useInvitationCacheUtils,
   invitationQueryKeys,
+} from "./invitations";
+
+export {
+  useGroups,
+  useGroupDetails,
+  useCreateGroup,
+  useUpdateGroup,
+  useDeleteGroup,
+  useGroupCacheUtils,
+  groupQueryKeys,
 } from "./management";
 
 export {
@@ -63,3 +69,10 @@ export {
   useRejectInvitation as useRejectGroupInvitation,
   useInvitationStatusSync,
 } from "./invitations";
+
+export {
+  ActiveGroupProvider,
+  useActiveGroup,
+  useActiveGroupId,
+  useHasGroups,
+} from "./hooks";

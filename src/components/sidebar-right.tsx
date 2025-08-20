@@ -58,13 +58,13 @@ export function SidebarRight({
   return (
     <Sidebar
       collapsible="none"
-      className="fixed right-0 top-0 hidden h-svh border-l lg:flex"
+      className="fixed right-0 top-0 hidden h-svh border-l lg:flex flex-col"
       {...props}
     >
-      <SidebarHeader className="border-sidebar-border h-16 border-b">
+      <SidebarHeader className="border-sidebar-border h-16 border-b flex-shrink-0">
         <NavUser />
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="flex-1 overflow-y-hidden hover:overflow-y-auto min-h-0">
         <DatePicker />
         {/* <SidebarSeparator className="mx-0 " /> */}
         <GroupMembers />
