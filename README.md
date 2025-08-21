@@ -6,7 +6,7 @@ Group trip planning application with voting system and hotel search integration.
 
 ## Tech Stack
 
-- Next.js 14 (App Router)
+- Next.js 15 (App Router)
 - TypeScript
 - React Query (TanStack Query)
 - Tailwind CSS + shadcn/ui
