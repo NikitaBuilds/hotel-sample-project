@@ -15,6 +15,7 @@ import {
   MessageCircle,
   Plus,
 } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 import { NavFavorites } from "@/components/nav-favorites";
 import { NavMain } from "@/components/nav-main";
@@ -114,11 +115,28 @@ const data = {
 export function SidebarLeft({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
+  const pathname = usePathname();
+  const [mounted, setMounted] = React.useState(false);
+
+  // Set mounted to true after hydration to prevent SSR mismatch
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Update navigation items to set isActive based on current path
+  // Only set isActive after component has mounted to prevent hydration mismatch
+  const navMainWithActive = data.navMain.map((item) => ({
+    ...item,
+    isActive: mounted
+      ? pathname === item.url || pathname.startsWith(`${item.url}/`)
+      : false,
+  }));
+
   return (
     <Sidebar className="border-r-0" {...props}>
       <SidebarHeader className="py-0 px-0">
         <ActiveGroupHeader />
-        <NavMain items={data.navMain} />
+        <NavMain items={navMainWithActive} />
       </SidebarHeader>
       <SidebarContent>
         {/* <NavFavorites favorites={data.favorites} /> */}
