@@ -80,9 +80,8 @@ export function HotelResults({
         </div>
         <h3 className="text-lg font-semibold mb-2">No Hotels Found</h3>
         <p className="text-muted-foreground mb-4">
-          {searchResults?.error
-            ? `${searchResults.error.message} - Try different dates or destinations`
-            : "Try adjusting your search criteria or explore different ski destinations"}
+          Try adjusting your search criteria or explore different ski
+          destinations
         </p>
         <Button variant="outline">Browse Popular Ski Resorts</Button>
       </div>
@@ -166,21 +165,23 @@ export function HotelResults({
         {/* Controls */}
         <div className="flex items-center gap-2">
           {/* Sort */}
-          <Select
-            value={sortBy}
-            onValueChange={(value: SortOption) => setSortBy(value)}
-          >
-            <SelectTrigger className="w-40">
-              <SortAscIcon className="h-4 w-4 mr-2" />
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="price-low">Price: Low to High</SelectItem>
-              <SelectItem value="price-high">Price: High to Low</SelectItem>
-              <SelectItem value="rating">Best Rated</SelectItem>
-              <SelectItem value="distance">Closest to Slopes</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="w-40">
+            <Select
+              value={sortBy}
+              onValueChange={(value: SortOption) => setSortBy(value)}
+            >
+              <SelectTrigger className="">
+                <SortAscIcon className="h-4 w-4 mr-2" />
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="price-low">Price: Low to High</SelectItem>
+                <SelectItem value="price-high">Price: High to Low</SelectItem>
+                <SelectItem value="rating">Best Rated</SelectItem>
+                <SelectItem value="distance">Closest to Slopes</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
           {/* View Mode */}
           <div className="flex border rounded-lg">

@@ -1,11 +1,20 @@
 "use client";
 
+import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   ArrowLeftIcon,
   StarIcon,
@@ -24,14 +33,23 @@ import {
   AirVentIcon,
   TvIcon,
   ShieldIcon,
+  ThumbsUpIcon,
+  VoteIcon,
+  CheckIcon,
 } from "lucide-react";
 import { useHotelDetails } from "@/services/lite/hotels";
+import { useActiveGroup } from "@/services/group/hooks";
+import { useCastVote } from "@/services/group/voting";
 import type { HotelDetails } from "@/services/lite/types";
+import type { VoteWeight } from "@/services/group/voting/types";
 
 export default function HotelDetailsPage() {
   const params = useParams();
   const router = useRouter();
   const hotelId = params["hotel-id"] as string;
+
+  const [votingStates, setVotingStates] = useState<Record<string, boolean>>({});
+  const [selectedWeight, setSelectedWeight] = useState<VoteWeight>("2");
 
   const {
     data: hotelResponse,
@@ -41,7 +59,35 @@ export default function HotelDetailsPage() {
     enabled: !!hotelId,
   });
 
+  const { activeGroup, activeGroupId } = useActiveGroup();
+  const castVoteMutation = useCastVote(activeGroupId || "");
+
   const hotel = hotelResponse?.data?.data;
+
+  const handleVote = async () => {
+    if (!hotel || !activeGroupId) return;
+
+    const voteKey = `${hotelId}-${selectedWeight}`;
+    setVotingStates((prev) => ({ ...prev, [voteKey]: true }));
+
+    try {
+      await castVoteMutation.mutateAsync({
+        hotel_id: hotelId,
+        hotel_name: hotel.name,
+        hotel_data: hotel,
+        is_upvote: true, // Only positive votes
+        weight: selectedWeight,
+      });
+      toast.success(
+        `Voted for ${hotel.name} with ${"⭐".repeat(parseInt(selectedWeight))}!`
+      );
+    } catch (error) {
+      console.error("Failed to cast vote:", error);
+      toast.error("Failed to cast vote. Please try again.");
+    } finally {
+      setVotingStates((prev) => ({ ...prev, [voteKey]: false }));
+    }
+  };
 
   if (isLoading) {
     return <HotelDetailsLoading />;
@@ -82,20 +128,6 @@ export default function HotelDetailsPage() {
     <div className="container mx-auto px-4 py-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <Button
-            variant="ghost"
-            onClick={() => router.back()}
-            className="flex items-center gap-2"
-          >
-            <ArrowLeftIcon className="h-4 w-4" />
-            Back to Search
-          </Button>
-          <div className="flex gap-2">
-            <Button variant="outline">Share Hotel</Button>
-            <Button>Select for Group</Button>
-          </div>
-        </div>
 
         {/* Hotel Overview */}
         <HotelOverview hotel={hotel} />
@@ -112,6 +144,18 @@ export default function HotelDetailsPage() {
 
           {/* Sidebar */}
           <div className="space-y-6">
+            {/* Voting Status */}
+            {activeGroup && (
+              <HotelVotingStatus
+                hotel={hotel}
+                activeGroup={activeGroup}
+                onVote={handleVote}
+                selectedWeight={selectedWeight}
+                setSelectedWeight={setSelectedWeight}
+                votingStates={votingStates}
+              />
+            )}
+
             {/* Location */}
             <HotelLocation hotel={hotel} />
 
@@ -143,7 +187,7 @@ function HotelOverview({ hotel }: { hotel: HotelDetails }) {
 
   return (
     <Card>
-      <CardContent className="pt-6">
+      <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Hotel Image */}
           <div className="aspect-video rounded-lg overflow-hidden bg-muted">
@@ -445,6 +489,104 @@ function HotelCheckInOut({ hotel }: { hotel: HotelDetails }) {
             </div>
           </div>
         )}
+      </CardContent>
+    </Card>
+  );
+}
+
+function HotelVotingStatus({
+  hotel,
+  activeGroup,
+  onVote,
+  selectedWeight,
+  setSelectedWeight,
+  votingStates,
+}: {
+  hotel: HotelDetails;
+  activeGroup: any;
+  onVote: () => void;
+  selectedWeight: VoteWeight;
+  setSelectedWeight: (weight: VoteWeight) => void;
+  votingStates: Record<string, boolean>;
+}) {
+  const isVotingOpen = ["planning", "voting"].includes(activeGroup.status);
+  const voteKey = `${hotel.id}-${selectedWeight}`;
+  const isVoting = votingStates[voteKey];
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <VoteIcon className="h-5 w-5" />
+          Group Voting
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="text-sm">
+          <div className="font-medium mb-2">Vote for {activeGroup.name}</div>
+          <div className="text-muted-foreground mb-4">
+            Add this hotel to your group's voting pool with your preferred
+            weight level.
+          </div>
+
+          {isVotingOpen ? (
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm font-medium mb-3 block">
+                  Choose Your Vote Weight
+                </label>
+                <div className="grid grid-cols-3 gap-2 mb-4">
+                  {(["1", "2", "3"] as VoteWeight[]).map((weight) => {
+                    const stars = "⭐".repeat(parseInt(weight));
+                    const isSelected = selectedWeight === weight;
+
+                    return (
+                      <Button
+                        key={weight}
+                        variant={isSelected ? "default" : "outline"}
+                        onClick={() => setSelectedWeight(weight)}
+                        className={`flex flex-col p-3 h-auto ${
+                          isSelected
+                            ? "bg-blue-500 hover:bg-blue-600"
+                            : "hover:bg-blue-50"
+                        }`}
+                      >
+                        <span className="text-lg mb-1">{stars}</span>
+                        <span className="text-xs">
+                          {weight === "1" && "Casual"}
+                          {weight === "2" && "Strong"}
+                          {weight === "3" && "Must-have"}
+                        </span>
+                      </Button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <Button
+                onClick={onVote}
+                disabled={isVoting}
+                className="w-full bg-green-500 hover:bg-green-600"
+              >
+                <ThumbsUpIcon className="h-4 w-4 mr-2" />
+                {isVoting
+                  ? "Voting..."
+                  : `Vote with ${"⭐".repeat(parseInt(selectedWeight))}`}
+              </Button>
+
+              <div className="text-xs text-muted-foreground p-2 bg-blue-50 rounded">
+                💡 You can vote multiple times with different weights to express
+                varying levels of preference.
+              </div>
+            </div>
+          ) : (
+            <div className="text-center py-4">
+              <Badge variant="secondary" className="bg-gray-100">
+                Voting is currently closed
+              </Badge>
+            </div>
+          )}
+        </div>
       </CardContent>
     </Card>
   );

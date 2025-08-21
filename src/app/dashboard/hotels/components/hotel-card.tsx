@@ -132,42 +132,21 @@ export function HotelCard({
         )}
       </div>
 
-      <CardHeader className="px-4 pt-4 pb-3">
-        <div className="flex items-start justify-between">
+      <CardHeader className="px-4 py-0 my-0">
+        <div className="flex items-start justify-between h-12">
           <div className="flex-1">
-            <h3 className="font-semibold text-lg leading-tight">
+            <h3 className="font-semibold text-lg leading-tight line-clamp-2">
               {hotelDetails.name}
             </h3>
           </div>
         </div>
 
         {/* Rating */}
-        <div className="mt-2">{renderStars(hotelDetails.rating)}</div>
+        <div className="">{renderStars(hotelDetails.rating)}</div>
       </CardHeader>
 
-      <CardContent className="p-4 pt-0">
+      <CardContent className="pb-4 px-4 pt-0">
         {/* Amenities */}
-        <div className="flex flex-wrap gap-2 mb-4">
-          {hotelDetails.amenities.slice(0, 4).map((amenity, index) => {
-            const icons = {
-              "Ski Storage": MountainIcon,
-              "Free WiFi": WifiIcon,
-              Restaurant: UtensilsIcon,
-              Parking: CarIcon,
-            };
-            const Icon = icons[amenity as keyof typeof icons] || UtensilsIcon;
-
-            return (
-              <div
-                key={index}
-                className="flex items-center gap-1 text-xs text-muted-foreground"
-              >
-                <Icon className="h-3 w-3" />
-                {amenity}
-              </div>
-            );
-          })}
-        </div>
 
         {/* Room Info */}
         {hotel.roomTypes && hotel.roomTypes.length > 0 && (
@@ -196,21 +175,16 @@ export function HotelCard({
           </div>
         )}
 
-        {/* Action Buttons */}
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            className="flex-1"
-            onClick={() =>
-              window.open(`/dashboard/hotels/${hotel.hotelId}`, "_blank")
-            }
-          >
-            View Details
-          </Button>
-          <Button className="flex-1" onClick={() => onSelect?.(hotel.hotelId)}>
-            Select for Group
-          </Button>
-        </div>
+        {/* Action Button */}
+        <Button
+          variant="outline"
+          className="w-full"
+          onClick={() =>
+            window.open(`/dashboard/hotels/${hotel.hotelId}`, "_blank")
+          }
+        >
+          View Details
+        </Button>
       </CardContent>
     </Card>
   );

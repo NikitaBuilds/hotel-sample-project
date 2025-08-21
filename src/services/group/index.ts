@@ -9,6 +9,9 @@ export * from "./management";
 // Invitations
 export * from "./invitations";
 
+// Voting
+export * from "./voting";
+
 // Additional Hooks
 export * from "./hooks";
 
@@ -76,3 +79,15 @@ export {
   useActiveGroupId,
   useHasGroups,
 } from "./hooks";
+
+export {
+  useVotingResults,
+  useGroupVotes,
+  useCastVote,
+  useUpdateVote,
+  useRemoveVote,
+  useCloseVoting,
+  useVotingResultsLive,
+  useVoteCacheUtils,
+  voteQueryKeys,
+} from "./voting";
