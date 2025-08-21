@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
 import { useAutoResizeTextarea } from "@/hooks/use-auto-resize-textarea";
 
-interface AIInputProps {
+interface NiceInputProps {
   id?: string;
   placeholder?: string;
   minHeight?: number;
@@ -15,14 +15,14 @@ interface AIInputProps {
   className?: string;
 }
 
-export function AIInput({
-  id = "ai-input",
+export function NiceInput({
+  id = "nice-input",
   placeholder = "Type your message...",
   minHeight = 52,
   maxHeight = 200,
   onSubmit,
   className,
-}: AIInputProps) {
+}: NiceInputProps) {
   const { textareaRef, adjustHeight } = useAutoResizeTextarea({
     minHeight,
     maxHeight,

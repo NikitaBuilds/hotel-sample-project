@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { AIInput } from "@/components/ui/ai-input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -60,19 +59,6 @@ export default function HotelsPage() {
 
   return (
     <div className="space-y-6">
-      {/* AI Search Header */}
-      {/* <header className="flex h-16 shrink-0 items-center">
-        <div className="flex-1 flex justify-center px-4">
-          <AIInput
-            placeholder="Ask me anything: 'Find ski hotels in Aspen for 4 people' or 'Show luxury resorts near slopes'..."
-            minHeight={52}
-            maxHeight={120}
-            className="[&_textarea]:py-4 [&_textarea]:leading-normal"
-            onSubmit={handleAISearch}
-          />
-        </div>
-      </header> */}
-
       {/* AI Query Display */}
       {aiQuery && (
         <Card className="mx-4">
