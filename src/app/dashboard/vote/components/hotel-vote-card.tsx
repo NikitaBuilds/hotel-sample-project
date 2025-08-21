@@ -33,6 +33,7 @@ interface HotelVoteCardProps {
   ) => void;
   onRemoveVote?: (voteId: string) => void;
   isVoting: boolean;
+  isRemovingVote?: boolean;
 }
 
 export function HotelVoteCard({
@@ -43,6 +44,7 @@ export function HotelVoteCard({
   onVote,
   onRemoveVote,
   isVoting,
+  isRemovingVote,
 }: HotelVoteCardProps) {
   const router = useRouter();
   const [selectedWeight, setSelectedWeight] = useState<VoteWeight>("2");
@@ -297,29 +299,26 @@ export function HotelVoteCard({
                           confirm(`Remove your vote for ${hotel.hotel_name}?`)
                         ) {
                           onRemoveVote(userVotes[0].id);
-                          toast.success(
-                            `Removed your vote for ${hotel.hotel_name}`
-                          );
                         }
                       }}
-                      disabled={isVoting}
+                      disabled={isVoting || isRemovingVote}
                       size="sm"
                       variant="ghost"
                       className="text-xs h-6 px-2 text-red-600 hover:text-red-700"
                     >
-                      Remove
+                      {isRemovingVote ? "Removing..." : "Remove Vote"}
                     </Button>
                   )}
                   <Button
                     onClick={handleVote}
-                    disabled={isVoting}
+                    disabled={isVoting || isRemovingVote}
                     size="sm"
                     variant="ghost"
                     className={`text-xs h-6 px-2 ${
                       hasVoted ? "text-green-600" : "text-blue-600"
                     }`}
                   >
-                    {isVoting ? "..." : hasVoted ? "Change" : "Vote"}
+                    {isVoting ? "Voting..." : hasVoted ? "Change Vote" : "Vote"}
                   </Button>
                 </div>
               </div>

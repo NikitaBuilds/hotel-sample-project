@@ -14,7 +14,7 @@ export default function DashboardLayout({
       <SidebarProvider>
         <SidebarLeft />
         <SidebarInset>
-          <div className="bg-background top-0 flex h-16 shrink-0 items-center gap-2 border-b fixed w-full" />
+          {/* <div className="bg-background top-0 flex h-16 shrink-0 items-center gap-2 border-b fixed w-full" /> */}
           <div className="flex flex-1 flex-col gap-4 py-4 px-2 mt-16 sm:pr-0 lg:pr-(--sidebar-width)">
             {children}
           </div>

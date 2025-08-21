@@ -33,7 +33,7 @@ import { ActiveGroupDisplay } from "./active-group-display";
 
 // Active Group Header - shows current trip
 const ActiveGroupHeader = () => (
-  <div className="border-b">
+  <div className="border-b h-16 flex items-center ">
     <ActiveGroupDisplay />
   </div>
 );
@@ -42,14 +42,9 @@ const ActiveGroupHeader = () => (
 const data = {
   navMain: [
     {
-      title: "Trip Overview",
-      url: "/dashboard",
-      icon: Home,
-    },
-    {
-      title: "Explore",
-      url: "/dashboard/explore",
-      icon: Mountain,
+      title: "Explore Hotels",
+      url: "/dashboard/hotels",
+      icon: Building,
     },
     {
       title: "Vote Together",
@@ -57,21 +52,10 @@ const data = {
       icon: Vote,
     },
     {
-      title: "Hotels & Lodging",
-      url: "/dashboard/hotels",
-      icon: Building,
-    },
-    {
-      title: "Budget & Payments",
-      url: "/dashboard/budget",
-      icon: CreditCard,
-    },
-    {
       title: "Chat",
       url: "/dashboard/chat",
       icon: MessageCircle,
     },
-    // Group settings
     {
       title: "Group Settings",
       url: "/dashboard/group-settings",

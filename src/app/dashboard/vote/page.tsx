@@ -6,11 +6,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { VoteIcon, XCircleIcon } from "lucide-react";
 import { useActiveGroup } from "@/services/group/hooks";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   useVotingResultsLive,
   useCastVote,
   useCloseVoting,
   useRemoveVote,
+  voteQueryKeys,
+  HotelVoteSummary,
+  Vote,
 } from "@/services/group/voting";
 import {
   VotingStats,
@@ -21,11 +25,13 @@ import {
 } from "./components";
 
 export default function VotePage() {
+  const queryClient = useQueryClient();
   const { activeGroup, activeGroupId, isActiveGroupLoading } = useActiveGroup();
   const {
     data: votingResults,
     isLoading: isVotingLoading,
     error: votingError,
+    refetch: refetchVotingResults,
   } = useVotingResultsLive(activeGroupId || "", !!activeGroupId);
 
   const castVoteMutation = useCastVote(activeGroupId || "");
@@ -95,6 +101,10 @@ export default function VotePage() {
         is_upvote: true, // Only positive votes
         weight: weight as "1" | "2" | "3",
       });
+
+      // Force immediate refetch of voting results
+      await refetchVotingResults();
+
       toast.success(
         `Voted for ${hotelName} with ${"⭐".repeat(parseInt(weight))}!`
       );
@@ -126,6 +136,10 @@ export default function VotePage() {
 
     try {
       await removeVoteMutation.mutateAsync(voteId);
+
+      // Force immediate refetch of voting results
+      await refetchVotingResults();
+
       // Toast is shown in the component
     } catch (error) {
       console.error("Failed to remove vote:", error);
@@ -133,6 +147,23 @@ export default function VotePage() {
     } finally {
       setVotingStates((prev) => ({ ...prev, [voteId]: false }));
     }
+  };
+
+  // Track loading states for each hotel
+  const getIsVoting = (hotel: HotelVoteSummary) => {
+    return (
+      !!votingStates[`${hotel.hotel_id}-1`] ||
+      !!votingStates[`${hotel.hotel_id}-2`] ||
+      !!votingStates[`${hotel.hotel_id}-3`]
+    );
+  };
+
+  const getIsRemovingVote = (hotel: HotelVoteSummary) => {
+    // Check if any vote for this hotel is being removed
+    return (
+      hotel.user_votes?.some((vote) => vote.id && !!votingStates[vote.id]) ||
+      false
+    );
   };
 
   // Sort hotels by weighted_score to ensure leaderboard updates correctly
@@ -168,12 +199,8 @@ export default function VotePage() {
                 isVotingOpen={isVotingOpen}
                 onVote={handleVote}
                 onRemoveVote={handleRemoveVote}
-                isVoting={
-                  !!votingStates[`${hotel.hotel_id}-1`] ||
-                  !!votingStates[`${hotel.hotel_id}-2`] ||
-                  !!votingStates[`${hotel.hotel_id}-3`] ||
-                  !!votingStates[hotel.user_votes?.[0]?.id]
-                }
+                isVoting={getIsVoting(hotel)}
+                isRemovingVote={getIsRemovingVote(hotel)}
               />
             ))}
           </div>
