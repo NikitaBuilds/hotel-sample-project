@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 
 import { HotelSearchForm, HotelResults, SkiFilters } from "./components";
 import { useHotelSearch } from "@/services/lite/hotels";
+import { useActiveGroup } from "@/services/group/hooks";
 import { SearchIcon, FilterIcon, SparklesIcon } from "lucide-react";
 import type {
   SearchRequest,
@@ -20,6 +21,14 @@ export default function HotelsPage() {
   const [favoriteHotels, setFavoriteHotels] = useState<Set<string>>(new Set());
   const [aiQuery, setAiQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+
+  // Get active group data to prefill adults count
+  const { maxMembers, activeGroup } = useActiveGroup();
+
+  // Debug: Check what values we're getting
+  console.log("Debug - Active Group:", activeGroup);
+  console.log("Debug - Max Members:", maxMembers);
+  console.log("Debug - Raw max_members:", activeGroup?.max_members);
 
   // Use the hotel search hook (gets all results)
   const {
@@ -98,7 +107,11 @@ export default function HotelsPage() {
 
           {/* Search Form */}
           <div className="max-w-4xl mx-auto">
-            <HotelSearchForm onSearch={handleSearch} isLoading={isLoading} />
+            <HotelSearchForm
+              onSearch={handleSearch}
+              isLoading={isLoading}
+              defaultAdults={maxMembers || 2} // Prefill with total group size, fallback to 2
+            />
           </div>
         </div>
 

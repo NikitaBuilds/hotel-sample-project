@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { NiceInput } from "@/components/ui/nice-input";
 import { useActiveGroup } from "@/services/group/hooks";
 import {
@@ -18,9 +18,15 @@ import {
 } from "./chat-skeleton";
 
 export function ChatContainer() {
+  const [mounted, setMounted] = useState(false);
   const { activeGroup } = useActiveGroup();
   const { user } = useUser();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Set mounted after hydration to prevent state cycling issues
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const {
     data: messagesData,
@@ -28,7 +34,7 @@ export function ChatContainer() {
     isError,
     refetch,
   } = useGroupMessages(activeGroup?.id || "", 1, 50, {
-    enabled: !!activeGroup?.id,
+    enabled: !!activeGroup?.id && mounted,
   });
 
   const { mutate: sendMessage } = useSendMessage(activeGroup?.id || "");
@@ -40,16 +46,16 @@ export function ChatContainer() {
     }
   }, [messagesData?.messages]);
 
-  // Auto-refresh messages every 10 seconds
+  // Auto-refresh messages every 10 seconds (only after mounted)
   useEffect(() => {
-    if (!activeGroup?.id) return;
+    if (!activeGroup?.id || !mounted) return;
 
     const interval = setInterval(() => {
       refetch();
     }, 10000);
 
     return () => clearInterval(interval);
-  }, [activeGroup?.id, refetch]);
+  }, [activeGroup?.id, refetch, mounted]);
 
   const handleSendMessage = (content: string) => {
     if (!activeGroup?.id || !content.trim()) return;
@@ -59,6 +65,11 @@ export function ChatContainer() {
       message_type: "text",
     });
   };
+
+  // Show loading state during SSR and initial hydration to prevent cycling
+  if (!mounted) {
+    return <ChatSkeleton />;
+  }
 
   if (!activeGroup) {
     return (

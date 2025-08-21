@@ -29,9 +29,14 @@ import { type DateRange } from "react-day-picker";
 interface HotelSearchFormProps {
   onSearch: (searchParams: SearchRequest) => void;
   isLoading?: boolean;
+  defaultAdults?: number;
 }
 
-export function HotelSearchForm({ onSearch, isLoading }: HotelSearchFormProps) {
+export function HotelSearchForm({
+  onSearch,
+  isLoading,
+  defaultAdults = 2,
+}: HotelSearchFormProps) {
   const [countryCode, setCountryCode] = useState("");
 
   // Set default dates: 2 months from now for 5 days
@@ -51,7 +56,7 @@ export function HotelSearchForm({ onSearch, isLoading }: HotelSearchFormProps) {
   );
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
   const [rooms, setRooms] = useState(1);
-  const [adults, setAdults] = useState(2);
+  const [adults, setAdults] = useState(defaultAdults);
 
   // Get ski countries for destination suggestions
   const { data: countries } = useCountries();
