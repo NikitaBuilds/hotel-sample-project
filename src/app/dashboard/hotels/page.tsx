@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
-import { HotelSearchForm, HotelResults, SkiFilters } from "./components";
+import { HotelSearchForm, HotelResults } from "./components";
 import { useHotelSearch } from "@/services/lite/hotels";
 import { useActiveGroup } from "@/services/group/hooks";
 import { SearchIcon, FilterIcon, SparklesIcon } from "lucide-react";
@@ -141,34 +141,6 @@ export default function HotelsPage() {
           </div>
         )}
       </div>
-
-      {/* Floating Filters Button */}
-      {searchResults && (
-        <div className="fixed bottom-6 right-6 z-50">
-          <Button
-            onClick={() => setShowFilters(true)}
-            size="lg"
-            className="rounded-full shadow-lg"
-          >
-            <FilterIcon className="h-4 w-4 mr-2" />
-            Filters
-          </Button>
-        </div>
-      )}
-
-      {/* Filters Sidebar */}
-      {showFilters && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex justify-end">
-          <div className="bg-background w-full max-w-md h-full overflow-y-auto">
-            <SkiFilters
-              filters={filters}
-              onFiltersChange={setFilters}
-              onClose={() => setShowFilters(false)}
-              isOpen={showFilters}
-            />
-          </div>
-        </div>
-      )}
     </div>
   );
 }
