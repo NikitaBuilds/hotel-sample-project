@@ -1,7 +1,3 @@
-Ran tool
-Ran tool
-Ran tool
-
 # Hotels Sample Project
 
 **Live Demo:** [https://hotel-sample-project.vercel.app/dashboard/hotels](https://hotel-sample-project.vercel.app/dashboard/hotels)
