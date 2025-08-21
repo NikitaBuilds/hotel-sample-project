@@ -1,8 +1,69 @@
-export default function Page() {
-  return (
-    <>
-      <div className="bg-muted/50 mx-auto h-24 w-full max-w-3xl rounded-xl" />
-      <div className="bg-muted/50 mx-auto h-[100vh] w-full max-w-3xl rounded-xl" />
-    </>
-  );
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useHasGroups } from "@/services/group/hooks/use-active-group";
+import { useUserInvitations } from "@/services/group/invitations";
+import { Loader2 } from "lucide-react";
+
+export default function DashboardPage() {
+  const router = useRouter();
+  const [isChecking, setIsChecking] = useState(true);
+
+  // Check if user has any groups
+  const { hasGroups, isLoading: isLoadingGroups } = useHasGroups();
+
+  // Check if user has any pending invitations
+  // Only fetch invitations if the user has no groups
+  const { data: invitationsData, isLoading: isLoadingInvitations } =
+    useUserInvitations(
+      1,
+      5, // Just need to know if any exist
+      "pending",
+      { enabled: !hasGroups && !isLoadingGroups } // Only check invitations if we know user has no groups
+    );
+
+  useEffect(() => {
+    // Wait until we have loaded both groups and invitations (if needed)
+    if (isLoadingGroups || (isLoadingInvitations && !hasGroups)) {
+      return;
+    }
+
+    setIsChecking(false);
+
+    // If user has no groups but has pending invitations, redirect to invitations page
+    if (
+      !hasGroups &&
+      invitationsData?.invitations &&
+      invitationsData.invitations.length > 0
+    ) {
+      router.push("/dashboard/profile/my-invitations");
+    } else {
+      // Otherwise redirect to hotels page
+      router.push("/dashboard/hotels");
+    }
+  }, [
+    hasGroups,
+    isLoadingGroups,
+    isLoadingInvitations,
+    invitationsData,
+    router,
+  ]);
+
+  // Show loading state while checking
+  if (isChecking) {
+    return (
+      <div className="flex items-center justify-center h-[calc(100vh-8rem)]">
+        <div className="flex flex-col items-center gap-2">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p className="text-sm text-muted-foreground">
+            Loading your dashboard...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Return empty fragment - we're always redirecting
+  return <></>; // This will never be shown as we always redirect
 }

@@ -91,4 +91,5 @@ export const invitationQueryKeys = {
   userInvitations: (userId: string) =>
     [...invitationQueryKeys.all, "user", userId] as const,
   detail: (id: string) => [...invitationQueryKeys.all, "detail", id] as const,
+  pendingInvitations: () => [...invitationQueryKeys.all, "pending"] as const,
 };

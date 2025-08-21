@@ -29,5 +29,6 @@ export {
   useCancelInvitation,
   useInvitationCacheUtils,
   useInvitationStatusSync,
+  useUserInvitations,
   invitationQueryKeys,
 } from "./hooks";

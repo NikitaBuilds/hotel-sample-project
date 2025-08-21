@@ -28,6 +28,19 @@ const invitationAPI = {
     return response.json();
   },
 
+  // Get invitations for the current user
+  getUserInvitations: async (
+    page = 1,
+    limit = 10,
+    status = "pending"
+  ): Promise<InvitationAPIResponse<PaginatedInvitationsResponse>> => {
+    const response = await fetch(
+      `/api/invitations/user?page=${page}&limit=${limit}&status=${status}`
+    );
+    if (!response.ok) throw new Error("Failed to fetch user invitations");
+    return response.json();
+  },
+
   // Get single invitation details
   getInvitation: async (
     invitationId: string
@@ -318,6 +331,31 @@ export const useInvitationStatusSync = (
     refetchIntervalInBackground: false,
     enabled: !!invitationId && enabled,
     select: (response) => response.data?.status,
+  });
+};
+
+/**
+ * Get User Invitations with Pagination
+ * Returns invitations sent to the current user's email
+ * Cache: 1 minute stale, 5 minutes cache
+ */
+export const useUserInvitations = (
+  page = 1,
+  limit = 10,
+  status = "pending",
+  options?: { enabled?: boolean }
+) => {
+  return useQuery({
+    queryKey: [
+      ...invitationQueryKeys.userInvitations("current"),
+      { page, limit, status },
+    ],
+    queryFn: () => invitationAPI.getUserInvitations(page, limit, status),
+    staleTime: 60 * 1000, // 1 minute
+    gcTime: 5 * 60 * 1000, // 5 minutes
+    refetchOnWindowFocus: true,
+    enabled: options?.enabled ?? true,
+    select: (response) => response.data,
   });
 };
 

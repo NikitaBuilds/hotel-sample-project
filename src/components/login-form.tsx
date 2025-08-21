@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useUser } from "@/services/supabase/use-user";
+import { usePostLoginRedirect } from "@/services/group/hooks";
 
 export function LoginForm({
   className,
@@ -19,6 +20,13 @@ export function LoginForm({
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const { signInWithEmail, signUpWithEmail, signInWithGoogle } = useUser();
+
+  // Post-login redirection logic
+  const { hasGroups, hasPendingInvitations, isChecking } = usePostLoginRedirect(
+    {
+      enabled: false, // We'll handle redirection manually after successful login
+    }
+  );
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,7 +44,12 @@ export function LoginForm({
         if (isSignUp) {
           setError("Check your email for a confirmation link!");
         } else {
-          router.push("/dashboard");
+          // Check if user has groups, if not and has invitations, redirect to invitations page
+          if (!hasGroups && hasPendingInvitations) {
+            router.push("/dashboard/profile/my-invitations");
+          } else {
+            router.push("/dashboard");
+          }
         }
       }
     } catch (err) {
@@ -54,6 +67,13 @@ export function LoginForm({
       const { error } = await signInWithGoogle();
       if (error) {
         setError(error.message);
+      } else {
+        // Check if user has groups, if not and has invitations, redirect to invitations page
+        if (!hasGroups && hasPendingInvitations) {
+          router.push("/dashboard/profile/my-invitations");
+        } else {
+          router.push("/dashboard");
+        }
       }
     } catch (err) {
       setError("An unexpected error occurred");
