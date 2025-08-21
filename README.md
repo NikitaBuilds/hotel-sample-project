@@ -21,7 +21,7 @@ src/services/
 │   ├── management/     # CRUD operations for groups
 │   ├── invitations/    # Email-based group invites
 │   ├── voting/         # Weighted hotel voting system
-│   ├── chat/           # Real-time group messaging
+│   ├── chat/           # Group messaging
 │   └── hooks/          # Active group state management
 ├── lite/
 │   ├── hotels/         # Hotel search and details
