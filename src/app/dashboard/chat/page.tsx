@@ -1,5 +1,5 @@
-// src/app/dashboard/chat/page.tsx
+import { ChatContainer } from "./components";
 
 export default function ChatPage() {
-  return <div>Chat</div>;
+  return <ChatContainer />;
 }
