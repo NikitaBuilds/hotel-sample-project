@@ -1,19 +1,23 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { GalleryVerticalEnd } from "lucide-react";
 
 import { LoginForm } from "@/components/login-form";
 import Featured_05 from "@/components/ui/globe-feature-section";
 import { useUser } from "@/services/supabase/use-user";
-import { redirect } from "next/navigation";
 
 export default function LoginPage() {
-  const { user } = useUser();
+  const { user, loading } = useUser();
+  const router = useRouter();
 
-  if (user) {
-    console.log("user", user);
-    redirect("/dashboard");
-  }
+  useEffect(() => {
+    if (!loading && user) {
+      console.log("user", user);
+      router.push("/dashboard");
+    }
+  }, [user, loading, router]);
 
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
