@@ -81,7 +81,10 @@ export function NavUser() {
     .slice(0, 2);
 
   const handleSignOut = async () => {
-    await signOut();
+    const { error } = await signOut();
+    if (!error) {
+      router.push("/login");
+    }
   };
 
   return (
